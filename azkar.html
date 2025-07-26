@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="ur" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <title>📿 اذکار و وظائف</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/earlyaccess/notonastaliqurdu.css" rel="stylesheet" />
+  <style>
+    body {
+      font-family: 'Noto Nastaliq Urdu', sans-serif;
+      background-color: #fff8e1;
+      margin: 0;
+      padding: 0;
+      color: #333;
+    }
+    header {
+      background: #ff6f00;
+      color: white;
+      text-align: center;
+      padding: 15px;
+    }
+    .back-link {
+      margin: 15px;
+      text-align: left;
+    }
+    .back-link a {
+      background: #0288d1;
+      color: white;
+      padding: 8px 16px;
+      border-radius: 6px;
+      text-decoration: none;
+    }
+    .container {
+      max-width: 700px;
+      margin: 20px auto;
+      background: white;
+      padding: 20px;
+      border: 2px solid #ff6f00;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+    }
+    h2 {
+      color: #ff6f00;
+    }
+    .ayat {
+      background: #e1f5fe;
+      padding: 12px;
+      border-radius: 6px;
+      margin-bottom: 15px;
+      border-right: 5px solid #0288d1;
+    }
+    .arabic {
+      font-size: 22px;
+      color: #d84315;
+      font-weight: bold;
+    }
+    .urdu {
+      font-size: 18px;
+      color: #00695c;
+    }
+    .roman {
+      font-size: 16px;
+      color: #555;
+      font-style: italic;
+    }
+    .add-section {
+      background: #fff3e0;
+      padding: 15px;
+      margin-top: 30px;
+      border-radius: 10px;
+      border: 1px dashed #ff6f00;
+    }
+    label {
+      display: block;
+      margin-top: 10px;
+      font-weight: bold;
+    }
+    textarea {
+      width: 100%;
+      padding: 12px 14px;
+      font-size: 16px;
+      font-family: 'Noto Nastaliq Urdu', sans-serif;
+      border: 2px solid #ccc;
+      border-radius: 8px;
+      resize: vertical;
+      direction: rtl;
+      background-color: #fefefe;
+      box-sizing: border-box;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 15px;
+      font-size: 16px;
+      border-radius: 6px;
+      border: 2px solid #aaa;
+    }
+    button {
+      margin-top: 10px;
+      padding: 10px 20px;
+      background-color: #0288d1;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0277bd;
+    }
+    .search-bar {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+    .search-bar input {
+      width: 100%;
+      max-width: 500px;
+      padding: 12px 16px;
+      font-size: 16px;
+      border: 2px solid #ff6f00;
+      border-radius: 8px;
+      outline: none;
+      background-color: #fff;
+      font-family: 'Noto Nastaliq Urdu', sans-serif;
+      direction: rtl;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+    .search-bar input:focus {
+      border-color: #0288d1;
+    }
+    footer {
+      background: #ff6f00;
+      color: white;
+      text-align: center;
+      padding: 10px;
+      margin-top: 30px;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>📿 اذکار و وظائف</h1>
+</header>
+
+<div class="back-link">
+  <a href="main.html">🔙 واپس</a>
+</div>
+
+<div class="container">
+  <h2>📖 اذکار کی فہرست</h2>
+
+  <div class="search-bar">
+    <input type="text" id="searchInput" oninput="searchAyats()" placeholder="🔍 تلاش کریں ذکر، ترجمہ، یا رومن..." />
+  </div>
+
+  <div id="ayatList"></div>
+
+  <div class="add-section">
+    <h2>➕ نیا ذکر شامل کریں</h2>
+
+    <label for="arabicAyat">📜 عربی ذکر</label>
+    <textarea id="arabicAyat" rows="2" placeholder="مثلاً: سُبْحَانَ اللَّهِ وَبِحَمْدِهِ"></textarea>
+
+    <label for="urduAyat">📝 اردو ترجمہ</label>
+    <textarea id="urduAyat" rows="2" placeholder="مثلاً: اللہ پاک ہے اپنی حمد کے ساتھ۔"></textarea>
+
+    <label for="romanAyat">🔤 Roman Urdu</label>
+    <textarea id="romanAyat" rows="2" placeholder="SubhanAllahi wa bihamdihi"></textarea>
+
+    <button onclick="addAyat()">➕ Add Zikr</button>
+  </div>
+</div>
+
+<footer>
+  © 2025 Azkar App | تمام حقوق محفوظ ہیں
+</footer>
+
+<script>
+  let ayatList = [];
+
+  function saveAyatList() {
+    localStorage.setItem("azkarList", JSON.stringify(ayatList));
+  }
+
+  function loadAyatList() {
+    const saved = localStorage.getItem("azkarList");
+    if (saved) {
+      ayatList = JSON.parse(saved);
+    } else {
+      ayatList = [
+        {
+          arabic: "سُبْحَانَ اللَّهِ وَبِحَمْدِهِ",
+          urdu: "اللہ پاک ہے اپنی حمد کے ساتھ۔",
+          roman: "SubhanAllahi wa bihamdihi"
+        },
+        {
+          arabic: "اللَّهُمَّ صَلِّ عَلَى مُحَمَّدٍ",
+          urdu: "اے اللہ! محمد پر درود بھیج۔",
+          roman: "Allahumma salli ala Muhammad"
+        }
+      ];
+      saveAyatList();
+    }
+    renderAyatList();
+  }
+
+  function renderAyatList(filteredList = ayatList) {
+    const container = document.getElementById("ayatList");
+    container.innerHTML = "";
+    filteredList.forEach(ayat => {
+      const div = document.createElement("div");
+      div.className = "ayat";
+      div.innerHTML = `
+        <div class="arabic">${ayat.arabic}</div>
+        <div class="urdu">${ayat.urdu}</div>
+        <div class="roman">(${ayat.roman})</div>
+      `;
+      container.appendChild(div);
+    });
+  }
+
+  function addAyat() {
+    const arabic = document.getElementById("arabicAyat").value.trim();
+    const urdu = document.getElementById("urduAyat").value.trim();
+    const roman = document.getElementById("romanAyat").value.trim();
+
+    if (!arabic || !urdu || !roman) {
+      alert("⛔ براہ کرم تمام فیلڈز کو پر کریں!");
+      return;
+    }
+
+    const newAyat = { arabic, urdu, roman };
+    ayatList.push(newAyat);
+    saveAyatList();
+    renderAyatList();
+
+    document.getElementById("arabicAyat").value = "";
+    document.getElementById("urduAyat").value = "";
+    document.getElementById("romanAyat").value = "";
+  }
+
+  function searchAyats() {
+    const query = document.getElementById("searchInput").value.trim().toLowerCase();
+    const filtered = ayatList.filter(ayat =>
+      ayat.arabic.toLowerCase().includes(query) ||
+      ayat.urdu.toLowerCase().includes(query) ||
+      ayat.roman.toLowerCase().includes(query)
+    );
+    renderAyatList(filtered);
+  }
+
+  window.onload = loadAyatList;
+</script>
+
+</body>
+</html>

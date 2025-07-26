@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="ur" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <title>📜 احادیث نبوی ﷺ</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/earlyaccess/notonastaliqurdu.css" rel="stylesheet" />
+  <style>
+    body {
+      font-family: 'Noto Nastaliq Urdu', sans-serif;
+      background-color: #e8f5e9;
+      margin: 0;
+      padding: 0;
+      color: #222;
+    }
+    header {
+      background: #2e7d32;
+      color: white;
+      text-align: center;
+      padding: 15px;
+    }
+    .back-link {
+      margin: 15px;
+      text-align: left;
+    }
+    .back-link a {
+      background: #00897b;
+      color: white;
+      padding: 8px 16px;
+      border-radius: 6px;
+      text-decoration: none;
+    }
+    .container {
+      max-width: 700px;
+      margin: 20px auto;
+      background: white;
+      padding: 20px;
+      border: 2px solid #2e7d32;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+    }
+    h2 {
+      color: #2e7d32;
+    }
+    .ayat {
+      background: #f1f8e9;
+      padding: 12px;
+      border-radius: 6px;
+      margin-bottom: 15px;
+      border-right: 5px solid #00897b;
+    }
+    .arabic {
+      font-size: 22px;
+      color: #1b5e20;
+      font-weight: bold;
+    }
+    .urdu {
+      font-size: 18px;
+      color: #004d40;
+    }
+    .roman {
+      font-size: 16px;
+      color: #555;
+      font-style: italic;
+    }
+    .add-section {
+      background: #e0f2f1;
+      padding: 15px;
+      margin-top: 30px;
+      border-radius: 10px;
+      border: 1px dashed #2e7d32;
+    }
+    label {
+      display: block;
+      margin-top: 10px;
+      font-weight: bold;
+    }
+    textarea, input[type="text"] {
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      border-radius: 6px;
+      border: 2px solid #ccc;
+      margin-bottom: 10px;
+      box-sizing: border-box;
+      direction: rtl;
+      font-family: 'Noto Nastaliq Urdu', sans-serif;
+    }
+    button {
+      margin-top: 10px;
+      padding: 10px 20px;
+      background-color: #00796b;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #004d40;
+    }
+    .search-bar {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+    .search-bar input {
+      width: 100%;
+      max-width: 500px;
+      padding: 12px 16px;
+      font-size: 16px;
+      border: 2px solid #2e7d32;
+      border-radius: 8px;
+      outline: none;
+      background-color: #fff;
+      direction: rtl;
+      font-family: 'Noto Nastaliq Urdu', sans-serif;
+    }
+    .search-bar input:focus {
+      border-color: #00897b;
+    }
+    footer {
+      background: #2e7d32;
+      color: white;
+      text-align: center;
+      padding: 10px;
+      margin-top: 30px;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>📜 احادیث نبوی ﷺ</h1>
+</header>
+
+<div class="back-link">
+  <a href="main.html">🔙 واپس</a>
+</div>
+
+<div class="container">
+  <h2>📖 احادیث کی فہرست</h2>
+
+  <div class="search-bar">
+    <input type="text" id="searchInput" oninput="searchAhadith()" placeholder="🔍 تلاش کریں حدیث، ترجمہ، یا رومن..." />
+  </div>
+
+  <div id="hadeesList"></div>
+
+  <div class="add-section">
+    <h2>➕ نئی حدیث شامل کریں</h2>
+
+    <label for="arabicHadith">📜 عربی حدیث</label>
+    <textarea id="arabicHadith" rows="2" placeholder="مثلاً: اِنَّمَا الاَعْمَالُ بِالنِّيَّاتِ"></textarea>
+
+    <label for="urduHadith">📝 اردو ترجمہ</label>
+    <textarea id="urduHadith" rows="2" placeholder="مثلاً: اعمال کا دار و مدار نیتوں پر ہے۔"></textarea>
+
+    <label for="romanHadith">🔤 Roman Urdu / Hawala</label>
+    <textarea id="romanHadith" rows="2" placeholder="Innamal a’maal bin niyyat. (Bukhari)"></textarea>
+
+    <button onclick="addHadith()">➕ Add Hadith</button>
+  </div>
+</div>
+
+<footer>
+  © 2025 Hadees App | تمام حقوق محفوظ ہیں
+</footer>
+
+<script>
+  let hadeesList = [];
+
+  function saveHadithList() {
+    localStorage.setItem("hadithList", JSON.stringify(hadeesList)); // ✅ درست Key
+  }
+
+  function loadHadithList() {
+    const saved = localStorage.getItem("hadithList") || "[]"; // ✅ خالی array fallback
+    try {
+      hadeesList = JSON.parse(saved);
+    } catch (e) {
+      hadeesList = [];
+    }
+
+    if (hadeesList.length === 0) {
+      hadeesList = [
+        {
+          arabic: "اِنَّمَا الاَعْمَالُ بِالنِّيَّاتِ",
+          urdu: "اعمال کا دار و مدار نیتوں پر ہے۔",
+          roman: "Innamal a’maal bin niyyat. (Bukhari)"
+        },
+        {
+          arabic: "الدُّنْيَا سِجْنُ الْمُؤْمِنِ وَجَنَّةُ الْكَافِرِ",
+          urdu: "دنیا مؤمن کے لیے قید خانہ اور کافر کے لیے جنت ہے۔",
+          roman: "Dunya momin ke liye qaid hai aur kafir ke liye jannat. (Muslim)"
+        }
+      ];
+      saveHadithList(); // default save
+    }
+
+    renderHadithList();
+  }
+
+  function renderHadithList(filteredList = hadeesList) {
+    const container = document.getElementById("hadeesList");
+    container.innerHTML = "";
+    filteredList.forEach(hadees => {
+      const div = document.createElement("div");
+      div.className = "ayat";
+      div.innerHTML = `
+        <div class="arabic">${hadees.arabic}</div>
+        <div class="urdu">${hadees.urdu}</div>
+        <div class="roman">(${hadees.roman})</div>
+      `;
+      container.appendChild(div);
+    });
+  }
+
+  function addHadith() {
+    const arabic = document.getElementById("arabicHadith").value.trim();
+    const urdu = document.getElementById("urduHadith").value.trim();
+    const roman = document.getElementById("romanHadith").value.trim();
+
+    if (!arabic || !urdu || !roman) {
+      alert("⛔ براہ کرم تمام فیلڈز پر کریں!");
+      return;
+    }
+
+    const newHadith = { arabic, urdu, roman };
+    hadeesList.push(newHadith);
+    saveHadithList();
+    renderHadithList();
+
+    document.getElementById("arabicHadith").value = "";
+    document.getElementById("urduHadith").value = "";
+    document.getElementById("romanHadith").value = "";
+  }
+
+  function searchAhadith() {
+    const query = document.getElementById("searchInput").value.trim().toLowerCase();
+    const filtered = hadeesList.filter(h =>
+      h.arabic.toLowerCase().includes(query) ||
+      h.urdu.toLowerCase().includes(query) ||
+      h.roman.toLowerCase().includes(query)
+    );
+    renderHadithList(filtered);
+  }
+
+  window.onload = loadHadithList;
+</script>
+
+</body>
+</html>
